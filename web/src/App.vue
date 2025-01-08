@@ -1,0 +1,19 @@
+<script setup lang="ts">
+import { RouterView } from 'vue-router'
+</script>
+
+<template>
+  <div id="app">
+    <RouterView />
+  </div>
+</template>
+
+<style lang="css" scoped>
+#app {
+  background: #eee;
+  width: 100vh;
+  height: 100vh;
+  overflow: hidden;
+  font-weight: 400 !important;
+}
+</style>
