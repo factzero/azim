@@ -2,17 +2,6 @@
 import { RouterView } from 'vue-router'
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
-// const sideWidth = ref("220")
-// const clacMenuWidth = () => {
-//   if (window.innerWidth < 800) {
-//     sideWidth.value = "64"
-//   } else {
-//     sideWidth.value = "220"
-//   }
-
-//   console.log(sideWidth.value)
-// }
-
 const sidelCollapse = ref(false)
 const sideWidth = ref('220px')
 const clacMenuWidth = () => {
@@ -40,10 +29,8 @@ onBeforeUnmount(() => {
   <div class="app-wrapper">
     <BaseHeader class="header" />
     <div class="flex">
-      <!-- <el-scrollbar class="menu" :style="{width:sideWidth+'px'}"> -->
-      <el-scrollbar class="menu" :style="{width:sideWidth}">
-      <!-- <el-scrollbar class="menu"> -->
-        <BaseSide :sidelCollapse="sidelCollapse"/>
+      <el-scrollbar class="menu" :style="{ width: sideWidth }">
+        <BaseSide :sidelCollapse="sidelCollapse" />
       </el-scrollbar>
       <el-scrollbar class="content">
         <RouterView />
@@ -51,22 +38,6 @@ onBeforeUnmount(() => {
     </div>
   </div>
 </template>
-
-<!-- <template>
-  <div class="app-wrapper">
-    <BaseHeader class="header" />
-    <div class="flex">
-      <div class="menu" :style="{width:sideWidth+'px'}">
-        <el-scrollbar>
-          <BaseSide />
-        </el-scrollbar>
-      </div>
-      <el-scrollbar class="content">
-        <RouterView />
-      </el-scrollbar>
-    </div>
-  </div>
-</template> -->
 
 <style>
 .app-wrapper {
