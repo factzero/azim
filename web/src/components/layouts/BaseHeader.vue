@@ -1,47 +1,65 @@
 <template>
   <el-menu class="el-menu-demo" mode="horizontal" :ellipsis="false" router>
-    <el-menu-item index="/" style="width: 200px">
-      <div class="flex items-center justify-center">
-        <div class="text-xl" i-ep-element-plus />
-        <span>Element Plus</span>
+    <div class="grid grid-cols-12 gap-12 items-center justify-center">
+      <div class="col-span-2">
+        <el-menu-item index="/" class="flex items-center justify-center">
+          <div class="flex items-center justify-center">
+            <div class="text-xl" i-ep-element-plus />
+            <span>Element Plus</span>
+          </div>
+        </el-menu-item>
       </div>
-    </el-menu-item>
 
-    <el-menu-item>
-      <el-input clearable style="width: 900px; height: 50px" placeholder="搜索您的照片">
-        <template #prefix>
-          <el-button :icon="Search" circle class="borderless-button" />
-        </template>
-        <template #suffix>
-          <el-button :icon="Menu" circle class="borderless-button" />
-        </template>
-      </el-input>
-    </el-menu-item>
+      <div class="col-span-6">
+        <el-menu-item>
+          <el-input clearable style="height: 50px" placeholder="搜索您的照片">
+            <template #prefix>
+              <el-button :icon="Search" circle class="borderless-button" />
+            </template>
+            <template #suffix>
+              <el-button :icon="Menu" circle class="borderless-button" />
+            </template>
+          </el-input>
+        </el-menu-item>
+      </div>
 
-    <el-menu-item>
-      <el-switch
-        v-model="isDark"
-        :active-action-icon="Moon"
-        :inactive-action-icon="Sunny"
-        inline-prompt
-        @change="toggleDark"
-      />
-    </el-menu-item>
+      <div class="col-start-10">
+        <div>
+          <el-menu-item v-show="showUpload">
+            <el-button :icon="QuestionFilled" circle class="borderless-button" />
+          </el-menu-item>
+        </div>
+      </div>
+      <div class="col-end-12">
+        <div class="flex items-center justify-start">
+          <div>
+            <el-switch
+              v-model="isDark"
+              :active-action-icon="Moon"
+              :inactive-action-icon="Sunny"
+              inline-prompt
+              @change="toggleDark"
+            />
+          </div>
 
-    <el-menu-item>
-      <el-button :icon="QuestionFilled" circle class="borderless-button" />
-    </el-menu-item>
+          <div class="px-4">
+            <el-button :icon="QuestionFilled" circle class="borderless-button" />
+          </div>
 
-    <el-menu-item>
-      <el-avatar :size="50" :src="circleUrl" />
-    </el-menu-item>
+          <div>
+            <el-avatar :size="50" :src="circleUrl" />
+          </div>
+        </div>
+      </div>
+    </div>
   </el-menu>
 </template>
 
 <script lang="ts" setup>
-import { reactive, toRefs } from 'vue'
+import { reactive, ref, toRefs, watch } from 'vue'
 import { Search, Menu, Sunny, Moon, QuestionFilled } from '@element-plus/icons-vue'
 import { useDark, useToggle } from '@vueuse/core'
+import { useRouter } from 'vue-router'
 
 const isDark = useDark()
 const toggleDark = useToggle(isDark)
@@ -53,6 +71,24 @@ const state = reactive({
 })
 
 const { circleUrl } = toRefs(state)
+
+const showUpload = ref(true)
+const router = useRouter()
+watch(
+  () => router.currentRoute,
+  (newRoute) => {
+    // 当路由发生变化时，这个函数会被调用
+    if (newRoute.value.path == '/') {
+      showUpload.value = true
+    } else {
+      showUpload.value = false
+    }
+  },
+  {
+    immediate: true, // 立即监听，不需要等待首次渲染
+    deep: true, // 深度监听路由对象的变化
+  },
+)
 </script>
 
 <style lang="scss" scoped>

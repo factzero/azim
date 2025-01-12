@@ -20,7 +20,7 @@ const centerDialogVisible = ref(false)
 
 <template>
   <el-menu router :collapse="sidelCollapse">
-    <el-menu-item index="/showImgs">
+    <el-menu-item index="/">
       <el-icon>
         <Picture />
       </el-icon>
