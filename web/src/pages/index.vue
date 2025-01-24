@@ -9,19 +9,24 @@
       >
         <div class="flex flex-wrap gap-x-1 gap-y-0">
           <div v-for="photo in group.photos" :key="photo.id">
-            <div class="photo-card" :class="{ 'bg-fuchsia-50': photo.selected }">
+            <div
+              class="photo-card"
+              :class="{ 'bg-fuchsia-50': photo.selected }"
+              @click="selectEditPhoto"
+            >
               <el-image
                 style="width: auto; height: 9rem"
                 :src="photo.url"
                 fit="contain"
                 :class="{ 'selected-photo': photo.selected }"
               />
-              <div class="hover-effect">
+              <div class="overlay" :class="{ 'always-show': photo.selected }">
                 <el-button
-                  :icon="Delete"
+                  :icon="photo.selected ? Select : CloseBold"
+                  :type="photo.selected ? 'primary' : 'info'"
                   class="delete-button"
                   circle
-                  @click="selectRemovePhoto(photo)"
+                  @click.stop="selectRemovePhoto(photo)"
                 ></el-button>
               </div>
             </div>
@@ -30,11 +35,93 @@
       </el-timeline-item>
     </el-timeline>
   </div>
+  <div v-if="showEdit" class="custom-dialog-overlay">
+    <div class="bg-black w-full h-full">
+      <el-container>
+        <el-header class="flex justify-between items-center h-12 w-full">
+          <div class="flex items-center">
+            <el-button size="large" circle class="black-to-gray" @click="closeEdit">
+              <el-icon :size="24" class="custom-icon-color"><Back /></el-icon>
+            </el-button>
+          </div>
+          <div class="flex items-center mx-2">
+            <el-button size="large" circle class="black-to-gray" @click="closeEdit">
+              <el-icon :size="24" class="custom-icon-color"><Share /></el-icon>
+            </el-button>
+            <el-button size="large" circle class="black-to-gray" @click="closeEdit">
+              <el-icon :size="24" class="custom-icon-color"><ZoomIn /></el-icon>
+            </el-button>
+            <el-button size="large" circle class="black-to-gray" @click="closeEdit">
+              <el-icon :size="24" class="custom-icon-color"><CopyDocument /></el-icon>
+            </el-button>
+            <el-button size="large" circle class="black-to-gray" @click="closeEdit">
+              <el-icon :size="24" class="custom-icon-color"><InfoFilled /></el-icon>
+            </el-button>
+            <el-button size="large" circle class="black-to-gray" @click="closeEdit">
+              <el-icon :size="24" class="custom-icon-color"><Star /></el-icon>
+            </el-button>
+            <el-button size="large" circle class="black-to-gray" @click="closeEdit">
+              <el-icon :size="24" class="custom-icon-color"><Delete /></el-icon>
+            </el-button>
+
+            <el-dropdown placement="bottom">
+              <el-button size="large" circle class="black-to-gray" @click="closeEdit">
+                <el-icon :size="24" class="custom-icon-color" style="transform: rotate(90deg)"
+                  ><MoreFilled
+                /></el-icon>
+              </el-button>
+
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item :icon="DataBoard">幻灯片放映</el-dropdown-item>
+                  <el-dropdown-item :icon="Download">下载</el-dropdown-item>
+                  <el-dropdown-item :icon="DocumentAdd">添加到相册</el-dropdown-item>
+                  <el-dropdown-item :icon="Share">添加到共享相册</el-dropdown-item>
+                  <el-dropdown-item :icon="User">设为个人资料图片</el-dropdown-item>
+                  <el-dropdown-item :icon="MoreFilled">归档</el-dropdown-item>
+                  <el-dropdown-item :icon="Upload">上传以替换</el-dropdown-item>
+                  <el-dropdown-item :icon="MoreFilled">在时间轴查看</el-dropdown-item>
+                  <el-dropdown-item :icon="MoreFilled">刷新人脸</el-dropdown-item>
+                  <el-dropdown-item :icon="MoreFilled">刷新元数据</el-dropdown-item>
+                  <el-dropdown-item :icon="MoreFilled">刷新缩略图</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </div>
+        </el-header>
+        <el-main class="h-full w-full">
+          <div class="flex items-center justify-center">
+            <el-image
+              style="width: auto; height: 100%"
+              src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+              fit="contain"
+            />
+          </div>
+        </el-main>
+      </el-container>
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { reactive } from 'vue'
-import { Delete } from '@element-plus/icons-vue'
+import { reactive, ref } from 'vue'
+import {
+  Select,
+  CloseBold,
+  Back,
+  Share,
+  ZoomIn,
+  CopyDocument,
+  InfoFilled,
+  Star,
+  Delete,
+  MoreFilled,
+  DataBoard,
+  Download,
+  DocumentAdd,
+  User,
+  Upload,
+} from '@element-plus/icons-vue'
 
 interface Photo {
   id: number
@@ -85,6 +172,17 @@ for (let i = 0; i < 20; i++) {
 function selectRemovePhoto(photo: Photo) {
   photo.selected = !photo.selected
 }
+
+const showEdit = ref(false)
+
+const selectEditPhoto = () => {
+  console.log('selectEditPhoto')
+  showEdit.value = true
+}
+
+const closeEdit = () => {
+  showEdit.value = false
+}
 </script>
 
 <style lang="scss" scoped>
@@ -105,39 +203,78 @@ function selectRemovePhoto(photo: Photo) {
 .photo-card {
   position: relative;
   cursor: pointer;
-  transition: transform 0.5s ease; /* 添加过渡效果 */
-
-  &:hover {
-    /* 鼠标悬停样式 */
-    border-color: #409eff;
-
-    .hover-effect {
-      width: 100%;
-      opacity: 1;
-    }
-  }
+  transition: transform 0.3s ease; /* 添加过渡效果 */
 }
 
-.hover-effect {
-  /* 鼠标悬停效果样式 */
+.overlay {
   position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   opacity: 0;
-  transition: var(--transition);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.photo-card:hover .overlay:not(.always-show) {
+  opacity: 1;
+}
+
+.always-show {
+  opacity: 1 !important;
 }
 
 .selected-photo {
   transform: scale(0.8); /* 缩小图片 */
   border-radius: 8px;
+  transition: transform 0.3s ease;
 }
 
 .delete-button {
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
+}
+
+.custom-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.black-to-gray {
+  background-color: #000 !important; /* 黑色背景 */
+  border-color: #000 !important; /* 匹配按钮边框颜色 */
+  color: #fff; /* 白色文本颜色 */
+}
+
+.black-to-gray:hover {
+  background-color: #888 !important; /* 灰色背景 */
+  border-color: #888 !important; /* 匹配按钮边框颜色 */
+}
+
+.custom-icon-color {
+  color: #ffffff; /* 针对字体图标 */
+  fill: #ffffff; /* 针对SVG图标 */
+}
+
+:deep(.el-dropdown-menu__item) {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  font-size: 16px;
+}
+
+:deep(.el-dropdown-menu__item:hover) {
+  background-color: #888;
+  color: #000;
 }
 </style>

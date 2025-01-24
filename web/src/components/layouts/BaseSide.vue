@@ -11,15 +11,18 @@ import {
   Delete,
 } from '@element-plus/icons-vue'
 import { ref } from 'vue'
+import { useMenuStore } from '@/stores/menu'
 
 defineProps(['sidelCollapse'])
 
 const serverStatus = ref('online')
 const centerDialogVisible = ref(false)
+const menuStore = useMenuStore()
+const activeIndex = ref(menuStore.loadActiveIndex)
 </script>
 
 <template>
-  <el-menu router :collapse="sidelCollapse">
+  <el-menu :default-active="activeIndex" router :collapse="sidelCollapse" class="sidebar-menu">
     <el-menu-item index="/">
       <el-icon>
         <Picture />
@@ -105,6 +108,34 @@ const centerDialogVisible = ref(false)
 </template>
 
 <style lang="scss" scoped>
+/* 自定义选中项的样式 */
+.sidebar-menu .el-menu-item.is-active {
+  background-color: #ecf5ff !important; /* 设置选中项的背景色 */
+  color: #409eff !important; /* 设置选中项的文字颜色 */
+  border-radius: 0 32px 32px 0;
+}
+
+/* 可选：为所有菜单项设置统一的高度 */
+.sidebar-menu .el-menu-item {
+  height: 50px;
+  line-height: 50px;
+}
+
+/* 确保整个菜单项（包括图标和文本）都能被点击 */
+.sidebar-menu .el-menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 20px !important; /* 调整内边距以适应布局 */
+  border-radius: 0 32px 32px 0;
+}
+
+/* 鼠标悬停时的样式 */
+.sidebar-menu .el-menu-item:hover {
+  background-color: #f5f7fa !important; /* 悬停时的背景色 */
+  border-radius: 0 32px 32px 0;
+}
+
 .el-menu {
   border-right: 0 !important;
 }
