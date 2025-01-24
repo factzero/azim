@@ -10,7 +10,8 @@ import {
   Folder,
   Delete,
 } from '@element-plus/icons-vue'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router';
 import { useMenuStore } from '@/stores/menu'
 
 defineProps(['sidelCollapse'])
@@ -19,6 +20,12 @@ const serverStatus = ref('online')
 const centerDialogVisible = ref(false)
 const menuStore = useMenuStore()
 const activeIndex = ref(menuStore.loadActiveIndex)
+const route = useRoute();
+
+// 监听整个 $route 对象的变化
+watch(route, () => {
+  activeIndex.value = menuStore.loadActiveIndex
+});
 </script>
 
 <template>

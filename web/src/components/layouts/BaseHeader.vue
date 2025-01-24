@@ -1,67 +1,56 @@
 <template>
-  <el-menu class="el-menu-demo" mode="horizontal" :ellipsis="false" router>
-    <div class="grid grid-cols-12 gap-12 items-center justify-center">
-      <div class="col-span-2">
-        <el-menu-item index="/" class="flex items-center justify-center">
-          <div class="flex items-center justify-center">
-            <div class="text-xl" i-ep-element-plus />
-            <span>Element Plus</span>
-          </div>
-        </el-menu-item>
-      </div>
-
-      <div class="col-span-6">
-        <el-menu-item>
-          <el-input clearable style="height: 50px" placeholder="搜索您的照片">
-            <template #prefix>
-              <el-button :icon="Search" circle class="borderless-button" />
-            </template>
-            <template #suffix>
-              <el-button :icon="Menu" circle class="borderless-button" />
-            </template>
-          </el-input>
-        </el-menu-item>
-      </div>
-
-      <div class="col-start-10">
-        <div>
-          <el-menu-item v-show="showUpload">
-            <el-button :icon="QuestionFilled" circle class="borderless-button" />
-          </el-menu-item>
-        </div>
-      </div>
-      <div class="col-end-12">
-        <div class="flex items-center justify-start">
-          <div>
-            <el-tooltip effect="light" content="切换主题" placement="bottom">
-              <el-switch
-                v-model="isDark"
-                :active-action-icon="Moon"
-                :inactive-action-icon="Sunny"
-                inline-prompt
-                @change="toggleDark"
-              />
-            </el-tooltip>
-          </div>
-
-          <div class="px-4">
-            <el-tooltip effect="light" content="支持与反馈" placement="bottom">
-              <el-button :icon="QuestionFilled" circle class="borderless-button" />
-            </el-tooltip>
-          </div>
-
-          <div>
-            <el-avatar :size="50" :src="circleUrl" />
-          </div>
-        </div>
+  <div class="flex items-center justify-between">
+    <div class="flex items-center px-12 h-full">
+      <div class="cursor-pointer" @click="router.push({ path: '/' })">
+        <img style="width: 50px" src="@/assets/logo.svg" />
       </div>
     </div>
-  </el-menu>
+
+    <div class="flex items-center p-2 h-full w-1/2">
+      <el-input clearable class="h-full" placeholder="搜索您的照片">
+        <template #prefix>
+          <el-button :icon="Search" circle class="borderless-button" />
+        </template>
+        <template #suffix>
+          <el-button :icon="Menu" circle class="borderless-button" />
+        </template>
+      </el-input>
+    </div>
+
+    <div class="flex items-center">
+      <div class="px-4" v-show="showUpload">
+        <el-button :icon="Upload" round class="white-to-gray flex items-center space-x-0.5"
+          >上传</el-button
+        >
+      </div>
+      <div class="px-4">
+        <el-tooltip effect="light" content="切换主题" placement="bottom">
+          <el-switch
+            v-model="isDark"
+            :active-action-icon="Moon"
+            :inactive-action-icon="Sunny"
+            inline-prompt
+            @change="toggleDark"
+          />
+        </el-tooltip>
+      </div>
+      <div class="px-4">
+        <el-tooltip effect="light" content="支持与反馈" placement="bottom">
+          <el-button circle class="borderless-button white-to-gray">
+            <el-icon :size="24"><QuestionFilled /></el-icon>
+          </el-button>
+        </el-tooltip>
+      </div>
+      <div class="m-4">
+        <el-avatar :size="48" :src="circleUrl" />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import { reactive, ref, toRefs, watch } from 'vue'
-import { Search, Menu, Sunny, Moon, QuestionFilled } from '@element-plus/icons-vue'
+import { Search, Menu, Sunny, Moon, QuestionFilled, Upload } from '@element-plus/icons-vue'
 import { useDark, useToggle } from '@vueuse/core'
 import { useRouter } from 'vue-router'
 
@@ -115,5 +104,16 @@ watch(
 .borderless-button {
   border: none !important;
   box-shadow: none !important; /* 可选，移除按钮的阴影 */
+}
+
+.white-to-gray {
+  background-color: #fff !important; /* 背景 */
+  border-color: #fff !important; /* 匹配按钮边框颜色 */
+  color: #000; /* 文本颜色 */
+}
+
+.white-to-gray:hover {
+  background-color: #cdd0d6 !important; /* 背景 */
+  border-color: #cdd0d6 !important; /* 匹配按钮边框颜色 */
 }
 </style>
