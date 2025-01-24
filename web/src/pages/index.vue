@@ -40,32 +40,46 @@
       <el-container>
         <el-header class="flex justify-between items-center h-12 w-full">
           <div class="flex items-center">
-            <el-button size="large" circle class="black-to-gray" @click="closeEdit">
-              <el-icon :size="24" class="custom-icon-color"><Back /></el-icon>
-            </el-button>
+            <el-tooltip effect="light" content="返回" placement="bottom">
+              <el-button size="large" circle class="black-to-gray" @click="closeEdit">
+                <el-icon :size="24" class="custom-icon-color"><Back /></el-icon>
+              </el-button>
+            </el-tooltip>
           </div>
           <div class="flex items-center mx-2">
-            <el-button size="large" circle class="black-to-gray" @click="closeEdit">
-              <el-icon :size="24" class="custom-icon-color"><Share /></el-icon>
-            </el-button>
-            <el-button size="large" circle class="black-to-gray" @click="closeEdit">
-              <el-icon :size="24" class="custom-icon-color"><ZoomIn /></el-icon>
-            </el-button>
-            <el-button size="large" circle class="black-to-gray" @click="closeEdit">
-              <el-icon :size="24" class="custom-icon-color"><CopyDocument /></el-icon>
-            </el-button>
-            <el-button size="large" circle class="black-to-gray" @click="closeEdit">
-              <el-icon :size="24" class="custom-icon-color"><InfoFilled /></el-icon>
-            </el-button>
-            <el-button size="large" circle class="black-to-gray" @click="closeEdit">
-              <el-icon :size="24" class="custom-icon-color"><Star /></el-icon>
-            </el-button>
-            <el-button size="large" circle class="black-to-gray" @click="closeEdit">
-              <el-icon :size="24" class="custom-icon-color"><Delete /></el-icon>
-            </el-button>
+            <el-tooltip effect="light" content="共享" placement="bottom">
+              <el-button size="large" circle class="black-to-gray" @click="closeEdit">
+                <el-icon :size="24" class="custom-icon-color"><Share /></el-icon>
+              </el-button>
+            </el-tooltip>
+            <el-tooltip effect="light" content="缩放" placement="bottom">
+              <el-button size="large" circle class="black-to-gray" @click="closeEdit">
+                <el-icon :size="24" class="custom-icon-color"><ZoomIn /></el-icon>
+              </el-button>
+            </el-tooltip>
+            <el-tooltip effect="light" content="复制" placement="bottom">
+              <el-button size="large" circle class="black-to-gray" @click="closeEdit">
+                <el-icon :size="24" class="custom-icon-color"><CopyDocument /></el-icon>
+              </el-button>
+            </el-tooltip>
+            <el-tooltip effect="light" content="信息" placement="bottom">
+              <el-button size="large" circle class="black-to-gray" @click="closeEdit">
+                <el-icon :size="24" class="custom-icon-color"><InfoFilled /></el-icon>
+              </el-button>
+            </el-tooltip>
+            <el-tooltip effect="light" content="收藏" placement="bottom">
+              <el-button size="large" circle class="black-to-gray" @click="closeEdit">
+                <el-icon :size="24" class="custom-icon-color"><Star /></el-icon>
+              </el-button>
+            </el-tooltip>
+            <el-tooltip effect="light" content="删除" placement="bottom">
+              <el-button size="large" circle class="black-to-gray" @click="closeEdit">
+                <el-icon :size="24" class="custom-icon-color"><Delete /></el-icon>
+              </el-button>
+            </el-tooltip>
 
             <el-dropdown placement="bottom">
-              <el-button size="large" circle class="black-to-gray" @click="closeEdit">
+              <el-button size="large" circle class="black-to-gray">
                 <el-icon :size="24" class="custom-icon-color" style="transform: rotate(90deg)"
                   ><MoreFilled
                 /></el-icon>
@@ -90,12 +104,18 @@
           </div>
         </el-header>
         <el-main class="h-full w-full">
-          <div class="flex items-center justify-center">
+          <div class="flex items-center justify-between">
+            <el-button circle class="black-to-gray" :style="{ width: '48px', height: '48px' }">
+              <el-icon :size="32" class="custom-icon-color"><ArrowLeft /></el-icon>
+            </el-button>
             <el-image
               style="width: auto; height: 100%"
               src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
               fit="contain"
             />
+            <el-button circle class="black-to-gray" :style="{ width: '48px', height: '48px' }">
+              <el-icon :size="32" class="custom-icon-color"><ArrowRight /></el-icon>
+            </el-button>
           </div>
         </el-main>
       </el-container>
@@ -121,6 +141,8 @@ import {
   DocumentAdd,
   User,
   Upload,
+  ArrowLeft,
+  ArrowRight,
 } from '@element-plus/icons-vue'
 
 interface Photo {

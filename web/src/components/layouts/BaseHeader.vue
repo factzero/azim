@@ -33,17 +33,21 @@
       <div class="col-end-12">
         <div class="flex items-center justify-start">
           <div>
-            <el-switch
-              v-model="isDark"
-              :active-action-icon="Moon"
-              :inactive-action-icon="Sunny"
-              inline-prompt
-              @change="toggleDark"
-            />
+            <el-tooltip effect="light" content="切换主题" placement="bottom">
+              <el-switch
+                v-model="isDark"
+                :active-action-icon="Moon"
+                :inactive-action-icon="Sunny"
+                inline-prompt
+                @change="toggleDark"
+              />
+            </el-tooltip>
           </div>
 
           <div class="px-4">
-            <el-button :icon="QuestionFilled" circle class="borderless-button" />
+            <el-tooltip effect="light" content="支持与反馈" placement="bottom">
+              <el-button :icon="QuestionFilled" circle class="borderless-button" />
+            </el-tooltip>
           </div>
 
           <div>
