@@ -9,7 +9,7 @@
         :key="index"
       >
         <el-timeline-item
-          v-for="(group, index) in groupedPhotos"
+          v-for="(group, index) in items"
           :key="index"
           :timestamp="group.timestamp"
           placement="top"
@@ -552,7 +552,7 @@ const extractYearMonth = (dateStr: string): string | undefined => {
 }
 
 .album {
-  padding: 5px;
+  padding: 0 5px 5px 5px;
   height: 100%;
   overflow: hidden;
   overflow-y: scroll;
