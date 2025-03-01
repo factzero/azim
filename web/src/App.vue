@@ -1,7 +1,18 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
+import { RouterView,useRoute  } from 'vue-router'
 import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { watch } from 'vue';
 
+// 使用 ref 来存储路由名称
+const routeName = ref<string>('/');
+// 获取当前路由信息
+const route = useRoute();
+// 监听路由名称的变化，并更新 routeName
+watch(() => route.name, (newName) => {
+  if (newName) {
+    routeName.value = newName as string;  // 确保类型为 string
+  }
+});
 const sidelCollapse = ref(false)
 const sideWidth = ref('220px')
 const clacMenuWidth = () => {
@@ -32,7 +43,10 @@ onBeforeUnmount(() => {
       <el-scrollbar class="menu" :style="{ width: sideWidth }">
         <BaseSide :sidelCollapse="sidelCollapse" />
       </el-scrollbar>
-      <el-scrollbar class="content">
+      <div class="content" v-if="routeName=='/'">
+        <RouterView />
+      </div>
+      <el-scrollbar class="content " v-else>
         <RouterView />
       </el-scrollbar>
     </div>
