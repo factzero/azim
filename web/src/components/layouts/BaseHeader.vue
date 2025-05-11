@@ -19,9 +19,21 @@
 
     <div class="flex items-center">
       <div class="px-4" v-show="showUpload">
-        <el-button :icon="Upload" round class="white-to-gray flex items-center space-x-0.5"
+        <!-- <el-button :icon="Upload" round class="white-to-gray flex items-center space-x-0.5"
           >上传</el-button
+        > -->
+        <el-upload
+          v-model:file-list="fileList"
+          :auto-upload="false"
+          :on-change="handleChangeUploadImg"
+          :show-file-list="false"
+          multiple
+          accept=".jpg,.jpeg,.bmp,.png"
         >
+          <el-button :icon="Upload" round class="white-to-gray flex items-center space-x-0.5"
+            >上传</el-button
+          >
+        </el-upload>
       </div>
       <div class="px-4">
         <el-tooltip effect="light" content="切换主题" placement="bottom">
@@ -53,6 +65,8 @@ import { reactive, ref, toRefs, watch } from 'vue'
 import { Search, Menu, Sunny, Moon, QuestionFilled, Upload } from '@element-plus/icons-vue'
 import { useDark, useToggle } from '@vueuse/core'
 import { useRouter } from 'vue-router'
+import { uploadImgs } from '@/api/ImgApi'
+import type { UploadFile } from 'element-plus'
 
 const isDark = useDark()
 const toggleDark = useToggle(isDark)
@@ -64,6 +78,23 @@ const state = reactive({
 })
 
 const { circleUrl } = toRefs(state)
+
+const fileList = ref([])
+
+const handleChangeUploadImg = async (file: UploadFile) => {
+  const nativeFile = file.raw || file
+  if (!(nativeFile instanceof File)) {
+    console.warn('Invalid file object received')
+    return
+  }
+
+  const formData = new FormData()
+  formData.append('file', nativeFile)
+  formData.append('mod_time', (nativeFile.lastModified / 1000.0).toString())
+  uploadImgs(formData).catch((err) => {
+    console.log('Upload error:', err.response?.data || err.message)
+  })
+}
 
 const showUpload = ref(true)
 const router = useRouter()

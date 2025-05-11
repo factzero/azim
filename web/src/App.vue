@@ -1,18 +1,21 @@
 <script setup lang="ts">
-import { RouterView,useRoute  } from 'vue-router'
+import { RouterView, useRoute } from 'vue-router'
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { watch } from 'vue';
+import { watch } from 'vue'
 
-// Ê¹ÓÃ ref À´´æ´¢Â·ÓÉÃû³Æ
-const routeName = ref<string>('/');
-// »ñÈ¡µ±Ç°Â·ÓÉĞÅÏ¢
-const route = useRoute();
-// ¼àÌıÂ·ÓÉÃû³ÆµÄ±ä»¯£¬²¢¸üĞÂ routeName
-watch(() => route.name, (newName) => {
-  if (newName) {
-    routeName.value = newName as string;  // È·±£ÀàĞÍÎª string
-  }
-});
+// ä½¿ç”¨ ref æ¥å­˜å‚¨è·¯ç”±åç§°
+const routeName = ref<string>('/')
+// è·å–å½“å‰è·¯ç”±ä¿¡æ¯
+const route = useRoute()
+// ç›‘å¬è·¯ç”±åç§°çš„å˜åŒ–ï¼Œå¹¶æ›´æ–° routeName
+watch(
+  () => route.name,
+  (newName) => {
+    if (newName) {
+      routeName.value = newName as string // ç¡®ä¿ç±»å‹ä¸º string
+    }
+  },
+)
 const sidelCollapse = ref(false)
 const sideWidth = ref('220px')
 const clacMenuWidth = () => {
@@ -23,8 +26,6 @@ const clacMenuWidth = () => {
     sideWidth.value = '220px'
     sidelCollapse.value = false
   }
-
-  console.log(sideWidth.value)
 }
 
 onMounted(() => {
@@ -43,10 +44,10 @@ onBeforeUnmount(() => {
       <el-scrollbar class="menu" :style="{ width: sideWidth }">
         <BaseSide :sidelCollapse="sidelCollapse" />
       </el-scrollbar>
-      <div class="content" v-if="routeName=='/'">
+      <div class="content" v-if="routeName == '/'">
         <RouterView />
       </div>
-      <el-scrollbar class="content " v-else>
+      <el-scrollbar class="content" v-else>
         <RouterView />
       </el-scrollbar>
     </div>

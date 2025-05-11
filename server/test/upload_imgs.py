@@ -6,7 +6,7 @@ import requests
 from utils import get_file_modify_time
 
 
-url = "http://127.0.0.1:7861/img/upload/"
+url = "http://127.0.0.1:9981/img/upload"
 
 folder_path = "D:/80dataset/testImages"
 store_folder_path = "F:/images_test"
