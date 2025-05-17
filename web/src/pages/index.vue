@@ -296,7 +296,7 @@ const timeline = ref<TimelineItem[]>([])
 let Fntimer: ReturnType<typeof setTimeout> | null = null
 
 /** 以下是右边日期进度条 */
-  const initTimeline = () => {
+const initTimeline = () => {
   // 获取左边图片区域高度
   const elTimelineHtml = document.querySelector('.el-timeline') as HTMLElement
   if (!elTimelineHtml) return
@@ -306,24 +306,33 @@ let Fntimer: ReturnType<typeof setTimeout> | null = null
   // 获取左边图片每个月的区块
   const months = document.querySelectorAll('.month') as NodeListOf<HTMLElement>
   const arrTemp: TimelineItem[] = []
+  const displayedYears = new Set<string>() // 记录已处理过的年份
 
   months.forEach((month) => {
     // 获取元素
     const rect = month.getBoundingClientRect()
     // 获取每个月区块的高度
     const monthHeight = rect.height
-
     // 计算元素顶部相对于 elTimeline 的位置
     const topPosition = rect.top - elTimelineHtml.getBoundingClientRect().top
-
     // 计算元素在 .el-timeline 中的位置百分比
     const percentage = (topPosition / elTimelineHeight) * 100
     // 计算元素高度所占 .el-timeline 高度的百分比
     const heightPercentage = (monthHeight / elTimelineHeight) * 100
+
+    const year = extractYear(month.getAttribute('data-year-month')!)
+    const yearMonth = extractYearMonth(month.getAttribute('data-year-month')!)
+    let shouldShowYearText = false
+    // 判断是否已经显示过该年
+    if (year && !displayedYears.has(year)) {
+      shouldShowYearText = true
+      displayedYears.add(year)
+    }
+
     // 打印每个元素的位置和占比
     arrTemp.push({
-      year: month.getAttribute('data-year'),
-      yearMonth: month.getAttribute('data-year-month'),
+      year: shouldShowYearText ? year : null,
+      yearMonth: yearMonth,
       positionPercentage: Number(percentage.toFixed(2)),
       heightPercentage: Number(heightPercentage.toFixed(2)),
     })
@@ -529,12 +538,12 @@ const tipsValue = ref('')
 // 点击时间条后的当前位置
 const tipsY = ref(0)
 // 将年月日提取为年
-const extractYear = (dateStr: string): string | undefined => {
+const extractYear = (dateStr: string): string | null => {
   const parts = dateStr.split('-')
-  return parts[0]
+  return parts.length > 0 && parts[0] ? parts[0] : null
 }
 // 将年月日提取为年月
-const extractYearMonth = (dateStr: string): string | undefined => {
+const extractYearMonth = (dateStr: string): string | null => {
   const parts = dateStr.split('-')
   return `${parts[0]}-${parts[1]}`
 }
