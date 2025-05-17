@@ -45,7 +45,27 @@ def paginated_image_from_db(session, page=1, per_page=10):
 
 
 @with_session
-def get_img_used_id(session, id):
-    img = session.query(ImgStoreModel).filter_by(id=id).first()
+def get_all_images_info(session) -> List[Dict]:
+    """
+    获取所有图片数据
+    """
+    order_by = desc(ImgStoreModel.modify_time)
+    images = session.query(ImgStoreModel).order_by(order_by).all()
+    base_url = "http://127.0.0.1:9981/img/get-img" 
+    return [
+        {
+            "id": image.id,
+            "img_id": image.img_id,
+            "name": image.name,
+            "time": image.modify_time.strftime("%Y-%m-%d"),
+            "url": f"{base_url}/{image.img_id}"
+        }
+        for image in images
+    ]
+
+
+@with_session
+def get_img_used_img_id(session, img_id):
+    img = session.query(ImgStoreModel).filter_by(img_id=img_id).first()
     img_list = [{"id": img.id, "name": img.name, "time": img.modify_time.isoformat(), "path": img.path}] if img is not None else [None]   
     return img_list

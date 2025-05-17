@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse, FileResponse
 import uuid
 import shutil
 
-from db.repository.images_store_repository import add_image_to_db, paginated_image_from_db, get_img_used_id
+from db.repository.images_store_repository import add_image_to_db, paginated_image_from_db, get_img_used_img_id, get_all_images_info
 from utils import get_file_modify_time
 
 
@@ -63,9 +63,14 @@ async def list_images(
     return {"images": images_info}
 
 
-@imgs_router.get("/get-img/{id}")
-async def get_img(id: int):
-    im = get_img_used_id(id)
+@imgs_router.get("/get-all-imgs-info")
+async def get_all_imgs_info():
+    imgs_info = get_all_images_info()
+    return {"images": imgs_info}
+
+@imgs_router.get("/get-img/{img_id}")
+async def get_img(img_id: str):
+    im = get_img_used_img_id(img_id)
     if len(im) == 0:
         return JSONResponse(status_code=500, content={"message": "Image ID not found"})
     if not os.path.exists(im[0]['path']):

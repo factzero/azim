@@ -190,6 +190,7 @@ import {
   ArrowLeft,
   ArrowRight,
 } from '@element-plus/icons-vue'
+import { getAllImgsInfo } from '@/api/ImgApi'
 
 interface Photo {
   id: number
@@ -203,59 +204,50 @@ interface PhotoList {
   photos: Photo[]
 }
 
-let GlobalID = 0
 const groupedPhotos = reactive<PhotoList[]>([])
 
-groupedPhotos.push({ timestamp: '2020-1-19', photos: [] })
-groupedPhotos.push({ timestamp: '2020-1-2', photos: [] })
-groupedPhotos.push({ timestamp: '2020-1-1', photos: [] })
-groupedPhotos.push({ timestamp: '2018-6-1', photos: [] })
-groupedPhotos.push({ timestamp: '2017-6-5', photos: [] })
-for (let i = 0; i < 10; i++) {
-  GlobalID++
-  groupedPhotos[0].photos.push({
-    id: GlobalID,
-    name: '31.jpg',
-    url: 'https://fuss10.elemecdn.com/9/bb/e27858e973f5d7d3904835f46abbdjpeg.jpeg',
-    selected: false,
-  })
-}
-for (let i = 0; i < 10; i++) {
-  GlobalID++
-  groupedPhotos[1].photos.push({
-    id: GlobalID,
-    name: '31.jpg',
-    url: 'https://fuss10.elemecdn.com/9/bb/e27858e973f5d7d3904835f46abbdjpeg.jpeg',
-    selected: false,
-  })
-}
-for (let i = 0; i < 20; i++) {
-  GlobalID++
-  groupedPhotos[2].photos.push({
-    id: GlobalID,
-    name: '31.jpg',
-    url: 'https://fuss10.elemecdn.com/9/bb/e27858e973f5d7d3904835f46abbdjpeg.jpeg',
-    selected: false,
-  })
-}
-for (let i = 0; i < 10; i++) {
-  GlobalID++
-  groupedPhotos[3].photos.push({
-    id: GlobalID,
-    name: '31.jpg',
-    url: 'https://fuss10.elemecdn.com/9/bb/e27858e973f5d7d3904835f46abbdjpeg.jpeg',
-    selected: false,
-  })
-}
+const getImgs = async () => {
+  try {
+    const res = await getAllImgsInfo()
 
-for (let i = 0; i < 10; i++) {
-  GlobalID++
-  groupedPhotos[4].photos.push({
-    id: GlobalID,
-    name: '31.jpg',
-    url: 'https://fuss10.elemecdn.com/9/bb/e27858e973f5d7d3904835f46abbdjpeg.jpeg',
-    selected: false,
-  })
+    // 假设返回的数据在 res.data.images 数组中
+    const rawPhotos = res.data.images
+
+    // 构建 Map<year-month, Photo[]>
+    const groupedMap = new Map<string, Photo[]>()
+
+    for (const item of rawPhotos) {
+      const yearMonthDate = item.time
+
+      const photo: Photo = {
+        id: item.id,
+        name: item.name,
+        url: item.url,
+        selected: false,
+      }
+
+      if (!groupedMap.has(yearMonthDate)) {
+        groupedMap.set(yearMonthDate, [])
+      }
+
+      groupedMap.get(yearMonthDate)?.push(photo)
+    }
+
+    // 构造新的 groupedPhotos 数据
+    const newGroupedPhotos: PhotoList[] = []
+
+    for (const [yearMonthDate, photos] of groupedMap.entries()) {
+      newGroupedPhotos.push({
+        timestamp: yearMonthDate,
+        photos,
+      })
+    }
+
+    // 清空并更新 reactive 数据
+    groupedPhotos.splice(0, groupedPhotos.length, ...newGroupedPhotos)
+  } catch (error) {
+    console.error('Failed to fetch image info:', error)
+  }
 }
 
 function selectRemovePhoto(photo: Photo) {
@@ -301,19 +293,20 @@ interface TimelineItem {
 const albumEl = ref<HTMLDivElement | null>(null)
 const timelineEl = ref<HTMLDivElement | null>(null)
 const timeline = ref<TimelineItem[]>([])
-let Fntimer: number | null = null
+let Fntimer: ReturnType<typeof setTimeout> | null = null
 
 /** 以下是右边日期进度条 */
-onMounted(() => {
-  // if (albumEl.value) {
-  //   console.log('Album 高度:', albumEl.value.clientHeight);
-  // }
+  const initTimeline = () => {
   // 获取左边图片区域高度
   const elTimelineHtml = document.querySelector('.el-timeline') as HTMLElement
+  if (!elTimelineHtml) return
+
   const elTimelineHeight = elTimelineHtml.scrollHeight
+
   // 获取左边图片每个月的区块
   const months = document.querySelectorAll('.month') as NodeListOf<HTMLElement>
   const arrTemp: TimelineItem[] = []
+
   months.forEach((month) => {
     // 获取元素
     const rect = month.getBoundingClientRect()
@@ -334,9 +327,10 @@ onMounted(() => {
       positionPercentage: Number(percentage.toFixed(2)),
       heightPercentage: Number(heightPercentage.toFixed(2)),
     })
-    timeline.value = arrTemp
   })
-  // 渲染节点完毕时，对滚动条进行监听
+
+  timeline.value = arrTemp
+
   nextTick(() => {
     // 使用以下代码，必须需要.album作为滚动区域，别的区域不行
     // 监听 .album 滚动事件
@@ -345,6 +339,12 @@ onMounted(() => {
       albumElement.addEventListener('scroll', onAlbumScroll)
     }
   })
+}
+
+onMounted(async () => {
+  await getImgs()
+  await nextTick() // 确保 DOM 更新后再操作 DOM
+  initTimeline()
 })
 
 const onAlbumScroll = (event: Event) => {
