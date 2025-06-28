@@ -50,6 +50,9 @@ onBeforeUnmount(() => {
       <el-scrollbar class="content" v-else>
         <RouterView />
       </el-scrollbar>
+
+      <!-- 常驻前台的消息提示框 -->
+      <status-badge />
     </div>
   </div>
 </template>

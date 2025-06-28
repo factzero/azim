@@ -19,9 +19,6 @@
 
     <div class="flex items-center">
       <div class="px-4" v-show="showUpload">
-        <!-- <el-button :icon="Upload" round class="white-to-gray flex items-center space-x-0.5"
-          >上传</el-button
-        > -->
         <el-upload
           v-model:file-list="fileList"
           :auto-upload="false"
@@ -67,7 +64,9 @@ import { useDark, useToggle } from '@vueuse/core'
 import { useRouter } from 'vue-router'
 import { uploadImgs } from '@/api/ImgApi'
 import type { UploadFile } from 'element-plus'
+import { useImageStore } from '@/stores/useImageStore'
 
+const imageStore = useImageStore()
 const isDark = useDark()
 const toggleDark = useToggle(isDark)
 
@@ -91,9 +90,15 @@ const handleChangeUploadImg = async (file: UploadFile) => {
   const formData = new FormData()
   formData.append('file', nativeFile)
   formData.append('mod_time', (nativeFile.lastModified / 1000.0).toString())
-  uploadImgs(formData).catch((err) => {
-    console.log('Upload error:', err.response?.data || err.message)
-  })
+  uploadImgs(formData)
+    .then((res) => {
+      const respData = res.data
+      imageStore.updateImageStatus(respData.status, respData.filename, respData.url)
+    })
+    .catch((err) => {
+      console.log('Upload error:', err.response?.data || err.message)
+      imageStore.updateImageStatus('error', file.name)
+    })
 }
 
 const showUpload = ref(true)
@@ -111,6 +116,13 @@ watch(
   {
     immediate: true, // 立即监听，不需要等待首次渲染
     deep: true, // 深度监听路由对象的变化
+  },
+)
+
+watch(
+  () => fileList.value,
+  (newFileList) => {
+    imageStore.setTotal(newFileList.length)
   },
 )
 </script>

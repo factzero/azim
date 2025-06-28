@@ -46,9 +46,9 @@ async def upload_image(file: UploadFile = File(...), mod_time: str = Form(...)):
         dest_file = os.path.join(new_folder_path, img_id+'-'+file.filename)
         shutil.move(file_location, dest_file)
 
-        img_id = add_image_to_db(name=file.filename, path=dest_file, modify_time=file_time, img_id=img_id)
+        imgStatus, url = add_image_to_db(name=file.filename, path=dest_file, modify_time=file_time, img_id=img_id)
         
-        return {"filename": file.filename, "path": dest_file}
+        return {'status': imgStatus, "filename": file.filename, "url": url}
     except Exception as e:
         return JSONResponse(status_code=500, content={"message": str(e)})
 

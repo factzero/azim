@@ -7,6 +7,8 @@ from db.models.images_store_model import ImgStoreModel
 from db.session import with_session
 
 
+base_url = "http://127.0.0.1:9981/img/get-img"
+
 @with_session
 def add_image_to_db(session, name: str, path: str, modify_time, img_id=None):
     """
@@ -23,7 +25,7 @@ def add_image_to_db(session, name: str, path: str, modify_time, img_id=None):
     session.add(m)
     session.commit()
 
-    return m.id
+    return 'success', f"{base_url}/{img_id}"
 
 
 @with_session
@@ -51,7 +53,7 @@ def get_all_images_info(session) -> List[Dict]:
     """
     order_by = desc(ImgStoreModel.modify_time)
     images = session.query(ImgStoreModel).order_by(order_by).all()
-    base_url = "http://127.0.0.1:9981/img/get-img" 
+     
     return [
         {
             "id": image.id,

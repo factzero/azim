@@ -5,9 +5,10 @@ export const uploadImgs = (data: FormData) => {
     url: '/img/upload',
     method: 'post',
     data: data,
-    responseType: 'blob',
+    responseType: 'json',
     headers: {
       'Content-Type': 'multipart/form-data',
+      Accept: 'application/json',
     },
   })
 }
