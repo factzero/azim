@@ -1,13 +1,14 @@
+import os
 import uuid
 from typing import Dict, List
 from sqlalchemy import desc
-import json
 
 from db.models.images_store_model import ImgStoreModel
 from db.session import with_session
 
 
-base_url = "http://127.0.0.1:9981/img/get-img"
+# 自定义域名或 IP（可通过环境变量注入）
+base_url = os.getenv("BASE_URL", "http://localhost:9981/img/get-img")
 
 @with_session
 def add_image_to_db(session, name: str, path: str, modify_time, img_id=None):

@@ -1,67 +1,101 @@
 <template>
-  <div>explore images</div>
-
-  <el-input clearable style="width: 300px; height: 50px">
-    <template #prefix>
-      <el-button :icon="Search" circle class="borderless-button" />
-    </template>
-    <template #suffix>
-      <el-button :icon="Menu" circle class="borderless-button" />
-    </template>
-  </el-input>
-
-  <el-input class="custom-input" placeholder="请输入内容"> </el-input>
-
-  <el-switch
-    v-model="isDark"
-    :active-action-icon="Moon"
-    :inactive-action-icon="Sunny"
-    inline-prompt
-    @change="toggleDark"
-  />
+  <div class="status-badge" v-if="imageStore.showStatusBadge">
+    <el-container>
+      <el-header>
+        <el-row :gutter="24">
+          <el-col :span="16">
+            <div class="text-sm">
+              剩余{{ imageStore.imgUploadInfo.remain }} - 已处理
+              {{ imageStore.imgUploadInfo.processed }}/{{ imageStore.imgUploadInfo.total }}
+            </div>
+            <div class="text-xs">
+              已上传
+              <span :style="{ color: '#67C23A' }">{{ imageStore.imgUploadInfo.success }}</span>
+              - 错误
+              <span :style="{ color: '#F56C6C' }">{{ imageStore.imgUploadInfo.error }}</span>
+              - 重复
+              <span :style="{ color: '#E6A23C' }">{{ imageStore.imgUploadInfo.duplicates }}</span>
+            </div>
+          </el-col>
+          <el-col :span="8" class="text-right">
+            <el-button circle size="small" class="icon-button">
+              <el-icon :size="20"><Setting /></el-icon>
+            </el-button>
+            <el-button circle size="small" class="icon-button">
+              <el-icon :size="20"><Minus /></el-icon>
+            </el-button>
+          </el-col>
+        </el-row>
+        <el-row :gutter="24">
+          <el-col :span="8" :offset="16" class="text-right">
+            <el-button circle size="small" class="icon-button">
+              <el-icon :size="20"><Remove /></el-icon>
+            </el-button>
+          </el-col>
+        </el-row>
+      </el-header>
+      <el-main>
+        <el-row
+          class="flex items-center py-1"
+          v-for="(item, index) in imageStore.imgList"
+          :key="index"
+        >
+          <el-col :span="2">
+            <div class="flex items-center">
+              <el-icon color="#E6A23C" :size="18"><Warning /></el-icon>
+            </div>
+          </el-col>
+          <el-col :span="14">
+            <div>{{ item.imageName.slice(-24) }}</div>
+          </el-col>
+          <el-col :span="8" class="text-right">
+            <el-button circle size="small" class="icon-button">
+              <el-icon :size="20" v-if="item.status === 'error'"><RefreshLeft /></el-icon>
+              <el-icon :size="20" v-else><Link /></el-icon>
+            </el-button>
+            <el-button
+              circle
+              size="small"
+              class="icon-button"
+              @click="imageStore.removeImage(index)"
+            >
+              <el-icon :size="20"><Close /></el-icon>
+            </el-button>
+          </el-col>
+        </el-row>
+      </el-main>
+    </el-container>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { Search, Menu, Sunny, Moon } from '@element-plus/icons-vue'
-import { useDark, useToggle } from '@vueuse/core'
+import { Setting, Minus, Remove, Warning, Close, Link, RefreshLeft } from '@element-plus/icons-vue'
+import { useImageStore } from '@/stores/useImageStore'
 
-const isDark = useDark()
-const toggleDark = useToggle(isDark)
+const imageStore = useImageStore()
 </script>
 
-<style scoped>
-:deep(.el-input__wrapper),
-:deep(.el-textarea__inner),
-:deep(.el-select__wrapper) {
-  border-radius: 120px;
+<style lang="scss" scoped>
+.status-badge {
+  position: fixed;
+  width: 300px;
+  display: flex;
+  align-items: center;
+  background-color: #ebedf0;
+  color: #303133;
+  border-radius: 10px;
+  padding: 12px 2px 2px 2px;
+  font-size: 14px;
 }
 
-.borderless-button {
-  border: none !important;
-  box-shadow: none !important; /* 可选，移除按钮的阴影 */
+.icon-button {
+  background-color: #ebedf0 !important; /* 背景 */
+  border-color: #ebedf0 !important; /* 匹配按钮边框颜色 */
+  color: #000; /* 文本颜色 */
 }
 
-.custom-input {
-  position: relative;
-  overflow: hidden;
-  padding: 0;
-}
-
-.custom-input::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #fff; /* 输入框的背景颜色 */
-  border-radius: 50%; /* 设置为50%以实现圆形输入框 */
-}
-
-.custom-input input {
-  border: none;
-  outline: none;
-  background-color: transparent;
-  padding: 10px; /* 根据需要调整 */
+.icon-button:hover {
+  background-color: #cdd0d6 !important; /* 背景 */
+  border-color: #cdd0d6 !important; /* 匹配按钮边框颜色 */
 }
 </style>

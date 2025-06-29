@@ -1,0 +1,34 @@
+name: azim
+
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    image: azim-server
+    container_name: server
+    ports:
+      - "9981:9981"
+    environment:
+      - ENV=dev
+    volumes:
+      - D:\100prjx\azim-data:/app/store
+    networks:
+      - app-network
+
+  webapp:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    image: azim-web
+    container_name: webapp
+    ports:
+      - "9963:9963"
+    depends_on:
+      - server
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
