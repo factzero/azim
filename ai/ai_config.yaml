@@ -1,0 +1,5 @@
+Image_feature:
+  model_name: clip
+  model_arch: ViT-L-14-336
+  img_mode_path: ./models/cnclip_vit_l14_336.img.fp32.onnx
+  txt_mode_path: ./models/cnclip_vit_l14_336.txt.fp32.onnx

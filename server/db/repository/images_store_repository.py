@@ -11,7 +11,7 @@ from db.session import with_session
 base_url = os.getenv("BASE_URL", "http://localhost:9981/img/get-img")
 
 @with_session
-def add_image_to_db(session, name: str, path: str, modify_time, img_id=None):
+def add_image_to_db(session, name: str, path: str, modify_time, img_id=None, feature=None):
     """
     新增图片
     """
@@ -22,6 +22,7 @@ def add_image_to_db(session, name: str, path: str, modify_time, img_id=None):
         name=name,
         path=path,
         modify_time=modify_time,
+        feature=feature,
     )
     session.add(m)
     session.commit()
@@ -36,6 +37,31 @@ def del_image_from_db(session, img_id):
         session.delete(del_img)
         session.commit()
     return True
+
+
+@with_session
+def update_image_feature(session, img_id: str, feature: dict):
+    """
+    根据 img_id 更新图片特征
+    """
+    img = session.query(ImgStoreModel).filter_by(img_id=img_id).first()
+    if not img:
+        return False
+
+    img.feature = feature
+    session.commit()
+    return True
+
+
+@with_session
+def get_image_feature(session, img_id: str):
+    """
+    根据 img_id 获取图片特征
+    """
+    img = session.query(ImgStoreModel).filter_by(img_id=img_id).first()
+    if not img:
+        return None
+    return img.feature
 
 
 @with_session

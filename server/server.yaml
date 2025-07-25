@@ -1,0 +1,8 @@
+AI:
+  server:
+    ip: http://127.0.0.1
+    port: 9988
+    timeout: 10
+  
+  search:
+    thre: 0.2

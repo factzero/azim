@@ -1,0 +1,2 @@
+命令：
+python .\tools\cnclip_pt_to_onnx\pytorch_to_onnx.py  --model-arch ViT-L-14-336 --pytorch-ckpt-path .\models\clip\clip_cn_vit-l-14-336.pt --save-onnx-path .\models\cnclip_vit_l14_336 --convert-vision --convert-text

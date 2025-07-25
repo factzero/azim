@@ -19,3 +19,15 @@ export const getAllImgsInfo = () => {
     method: 'get',
   })
 }
+
+interface SearchData {
+  txt: string
+}
+
+export const searchImgs = (data: SearchData) => {
+  return service({
+    url: '/img/search',
+    method: 'post',
+    data: data,
+  })
+}
