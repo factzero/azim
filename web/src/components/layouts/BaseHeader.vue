@@ -1,69 +1,81 @@
 <template>
-  <div class="flex items-center justify-between">
-    <div class="flex items-center px-12 h-full">
-      <div class="cursor-pointer" @click="router.push({ path: '/' })">
-        <img style="width: 50px" src="@/assets/logo.svg" />
-      </div>
-    </div>
+  <div class="header-container">
+    <el-row :gutter="24" class="h-full items-center">
+      <!-- Logo Section -->
+      <el-col :span="4">
+        <div class="flex items-center px-12 h-full">
+          <div class="cursor-pointer" @click="router.push({ path: '/' })">
+            <img style="width: 50px" src="@/assets/logo.svg" />
+          </div>
+        </div>
+      </el-col>
 
-    <div class="flex items-center p-2 h-full w-1/2">
-      <el-input
-        clearable
-        class="h-full"
-        v-model="searchText"
-        placeholder="搜索您的照片"
-        @keyup.enter="SearchImgs"
-      >
-        <template #prefix>
-          <el-button :icon="Search" circle class="borderless-button" />
-        </template>
-        <template #suffix>
-          <el-button :icon="Menu" circle class="borderless-button" />
-        </template>
-      </el-input>
-    </div>
-
-    <div class="flex items-center">
-      <div class="px-4" v-show="showUpload">
-        <el-upload
-          v-model:file-list="fileList"
-          :auto-upload="false"
-          :on-change="handleChangeUploadImg"
-          :show-file-list="false"
-          multiple
-          accept=".jpg,.jpeg,.bmp,.png"
-        >
-          <el-button :icon="Upload" round class="white-to-gray flex items-center space-x-0.5"
-            >上传</el-button
+      <!-- Search Section -->
+      <el-col :span="14">
+        <div class="flex items-center justify-center h-full">
+          <el-input
+            clearable
+            class="h-full"
+            v-model="searchText"
+            placeholder="搜索您的照片"
+            @keyup.enter="SearchImgs"
+            style="--el-input-height: 48px"
           >
-        </el-upload>
-      </div>
-      <div class="px-4">
-        <el-tooltip effect="light" content="切换主题" placement="bottom">
-          <el-switch
-            v-model="isDark"
-            :active-action-icon="Moon"
-            :inactive-action-icon="Sunny"
-            inline-prompt
-            @change="toggleDark"
-          />
-        </el-tooltip>
-      </div>
-      <div class="px-4">
-        <el-tooltip effect="light" content="支持与反馈" placement="bottom">
-          <el-button circle class="borderless-button white-to-gray">
-            <el-icon :size="24"><QuestionFilled /></el-icon>
-          </el-button>
-        </el-tooltip>
-      </div>
-      <div class="m-4">
-        <el-avatar :size="48" :src="circleUrl" />
-      </div>
-    </div>
+            <template #prefix>
+              <el-button :icon="Search" circle class="borderless-button" />
+            </template>
+            <template #suffix>
+              <el-button :icon="Menu" circle class="borderless-button" />
+            </template>
+          </el-input>
+        </div>
+      </el-col>
+
+      <!-- Action Buttons Section -->
+      <el-col :span="6">
+        <div class="flex items-center justify-end h-full">
+          <div class="px-4" v-show="showUpload">
+            <el-upload
+              v-model:file-list="fileList"
+              :auto-upload="false"
+              :on-change="handleChangeUploadImg"
+              :show-file-list="false"
+              multiple
+              accept=".jpg,.jpeg,.bmp,.png"
+            >
+              <el-button :icon="Upload" round class="white-to-gray flex items-center space-x-0.5"
+                >上传</el-button
+              >
+            </el-upload>
+          </div>
+          <div class="px-4">
+            <el-tooltip effect="light" content="切换主题" placement="bottom">
+              <el-switch
+                v-model="isDark"
+                :active-action-icon="Moon"
+                :inactive-action-icon="Sunny"
+                inline-prompt
+              />
+            </el-tooltip>
+          </div>
+          <div class="px-4">
+            <el-tooltip effect="light" content="支持与反馈" placement="bottom">
+              <el-button circle class="borderless-button white-to-gray">
+                <el-icon :size="24"><QuestionFilled /></el-icon>
+              </el-button>
+            </el-tooltip>
+          </div>
+          <div class="m-4">
+            <el-avatar :size="48" :src="circleUrl" />
+          </div>
+        </div>
+      </el-col>
+    </el-row>
+
     <div class="search-dialog-overlay" v-if="showSearchPage">
-      <div class="bg-white w-full h-full">
+      <div class="w-full h-full">
         <el-container>
-          <el-header class="flex items-center h-12 w-full bg-gray-400 relative px-4">
+          <el-header class="flex items-center h-12 w-full relative px-4 header-search">
             <el-row :gutter="20" class="w-full h-full">
               <el-col :span="4">
                 <div class="flex justify-start items-center h-full">
@@ -143,7 +155,7 @@ import {
   Select,
   CloseBold,
 } from '@element-plus/icons-vue'
-import { useDark, useToggle } from '@vueuse/core'
+import { useDark } from '@vueuse/core'
 import { useRouter } from 'vue-router'
 import { uploadImgs, searchImgs } from '@/api/ImgApi'
 import type { UploadFile } from 'element-plus'
@@ -218,7 +230,6 @@ function selectRemovePhoto(photo: Photo) {
 
 const imageStore = useImageStore()
 const isDark = useDark()
-const toggleDark = useToggle(isDark)
 
 const state = reactive({
   circleUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
@@ -278,6 +289,15 @@ watch(
 </script>
 
 <style lang="scss" scoped>
+.header-container {
+  background-color: var(--el-bg-color);
+  height: 100%;
+}
+
+.header-search {
+  background-color: var(--el-fill-color-light);
+}
+
 .el-menu-demo {
   &.el-menu--horizontal > .el-menu-item:nth-child(2) {
     margin-right: auto;
@@ -285,7 +305,7 @@ watch(
 }
 
 .el-menu-demo .el-menu-item:hover {
-  background-color: var(--el-menu-bg-color); /* 鼠标悬浮背景色 */
+  background-color: var(--el-menu-bg-color);
 }
 
 :deep(.el-input__wrapper),
@@ -296,18 +316,18 @@ watch(
 
 .borderless-button {
   border: none !important;
-  box-shadow: none !important; /* 可选，移除按钮的阴影 */
+  box-shadow: none !important;
 }
 
 .white-to-gray {
-  background-color: #fff !important; /* 背景 */
-  border-color: #fff !important; /* 匹配按钮边框颜色 */
-  color: #000; /* 文本颜色 */
+  background-color: var(--el-bg-color) !important;
+  border-color: var(--el-border-color) !important;
+  color: var(--el-text-color-primary) !important;
 }
 
 .white-to-gray:hover {
-  background-color: #cdd0d6 !important; /* 背景 */
-  border-color: #cdd0d6 !important; /* 匹配按钮边框颜色 */
+  background-color: var(--el-fill-color-light) !important;
+  border-color: var(--el-border-color) !important;
 }
 
 .search-dialog-overlay {
@@ -316,11 +336,19 @@ watch(
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: black;
+  background-color: var(--el-bg-color);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 900;
+
+  :deep(.el-container) {
+    background-color: var(--el-bg-color);
+  }
+
+  :deep(.el-header) {
+    background-color: var(--el-fill-color-light) !important;
+  }
 }
 
 .edit-dialog-overlay {
@@ -329,7 +357,7 @@ watch(
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: black;
+  background-color: rgba(0, 0, 0, 0.8);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -339,7 +367,8 @@ watch(
 .photo-card {
   position: relative;
   cursor: pointer;
-  transition: transform 0.3s ease; /* 添加过渡效果 */
+  transition: transform 0.3s ease;
+  background-color: var(--el-bg-color);
 }
 
 .overlay {
@@ -363,7 +392,7 @@ watch(
 }
 
 .selected-photo {
-  transform: scale(0.8); /* 缩小图片 */
+  transform: scale(0.8);
   border-radius: 8px;
   transition: transform 0.3s ease;
 }

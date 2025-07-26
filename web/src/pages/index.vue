@@ -449,10 +449,15 @@ const extractYearMonth = (dateStr: string): string | null => {
   position: -webkit-sticky; /* Safari */
   position: sticky;
   top: 0;
-  background-color: white;
   z-index: 1;
   padding: 10px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  background-color: var(--el-bg-color);
+}
+
+/* 统一 el-timeline-item 的背景色 */
+:deep(.el-timeline-item) {
+  background-color: var(--el-bg-color);
 }
 
 .album {
@@ -460,6 +465,7 @@ const extractYearMonth = (dateStr: string): string | null => {
   height: 100%;
   overflow: hidden;
   overflow-y: scroll;
+  background-color: var(--el-bg-color-page);
 
   &::-webkit-scrollbar {
     display: none;
@@ -470,7 +476,9 @@ const extractYearMonth = (dateStr: string): string | null => {
 .photo-card {
   position: relative;
   cursor: pointer;
-  transition: transform 0.3s ease; /* 添加过渡效果 */
+  transition: transform 0.3s ease;
+  background-color: var(--el-bg-color);
+  border: none;
 }
 
 .overlay {
@@ -494,7 +502,7 @@ const extractYearMonth = (dateStr: string): string | null => {
 }
 
 .selected-photo {
-  transform: scale(0.8); /* 缩小图片 */
+  transform: scale(0.8);
   border-radius: 8px;
   transition: transform 0.3s ease;
 }
@@ -511,38 +519,11 @@ const extractYearMonth = (dateStr: string): string | null => {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: black;
+  background-color: rgba(0, 0, 0, 0.8);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-}
-
-.black-to-gray {
-  background-color: #000 !important; /* 黑色背景 */
-  border-color: #000 !important; /* 匹配按钮边框颜色 */
-  color: #fff; /* 白色文本颜色 */
-}
-
-.black-to-gray:hover {
-  background-color: #888 !important; /* 灰色背景 */
-  border-color: #888 !important; /* 匹配按钮边框颜色 */
-}
-
-.custom-icon-color {
-  color: #ffffff; /* 针对字体图标 */
-  fill: #ffffff; /* 针对SVG图标 */
-}
-
-:deep(.el-dropdown-menu__item) {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  font-size: 16px;
-}
-
-:deep(.el-dropdown-menu__item:hover) {
-  background-color: #888;
-  color: #000;
 }
 
 .timeline-box {
@@ -558,9 +539,11 @@ const extractYearMonth = (dateStr: string): string | null => {
     position: relative;
     width: 100%;
     height: 100%;
-    color: #3a3a3a;
+    color: var(--custom-timeline-color);
     cursor: row-resize;
     user-select: none;
+    /* 修改这里，统一背景色 */
+    background-color: var(--el-bg-color);
     /* 标准属性 */
     -webkit-user-select: none;
     /* Chrome、Safari、Opera */
@@ -579,7 +562,7 @@ const extractYearMonth = (dateStr: string): string | null => {
         width: 5px;
         height: 5px;
         border-radius: 50%;
-        background: #d1d5db;
+        background: var(--custom-timeline-dot);
       }
 
       .txt {
@@ -590,6 +573,7 @@ const extractYearMonth = (dateStr: string): string | null => {
         /* 第一行文本向左缩进，效果像右往左 */
         line-height: 1;
         transform: translateY(calc(50% - 2.5px));
+        color: var(--custom-timeline-color);
       }
     }
 
@@ -601,11 +585,12 @@ const extractYearMonth = (dateStr: string): string | null => {
       height: 30px;
       line-height: 30px;
       text-align: center;
-      background: rgba($color: #fff, $alpha: 0.8);
+      background: var(--custom-tips-bg);
       pointer-events: none;
-      border-bottom: 2px solid #5764bb;
+      border-bottom: 2px solid var(--custom-tips-border);
       border-top-left-radius: 6px;
-      box-shadow: -1px -1px 5px #a3a3a3;
+      box-shadow: -1px -1px 5px var(--el-box-shadow-light);
+      color: var(--el-text-color-primary);
 
       &.noClick {
         width: 50%;
@@ -623,7 +608,7 @@ const extractYearMonth = (dateStr: string): string | null => {
         content: '';
         width: 100%;
         height: 10px;
-        background: #5764bb;
+        background: var(--custom-tips-border);
       }
     }
   }

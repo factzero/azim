@@ -2,3 +2,45 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* 亮色主题 */
+:root {
+  --custom-header-bg: #ffffff;
+  --custom-card-bg: #ffffff;
+  --custom-timeline-bg: #ffffff; /* 保持与其他组件一致 */
+  --custom-timeline-color: #303133;
+  --custom-tips-bg: rgba(255, 255, 255, 0.8);
+  --custom-tips-border: rgb(198, 226, 255);
+  --custom-album-bg: #ffffff;
+  --custom-sidebar-bg: #ffffff;
+}
+
+/* 暗色主题 */
+html.dark {
+  --custom-header-bg: #1f1f1f;
+  --custom-card-bg: #1f1f1f;
+  --custom-timeline-bg: #1f1f1f; /* 保持与其他组件一致 */
+  --custom-timeline-color: #d1d1d1;
+  --custom-timeline-dot: #d1d1d1;
+  --custom-tips-bg: rgba(40, 40, 40, 0.8);
+  --custom-tips-border: rgb(100, 150, 255);
+  --custom-album-bg: #1a1a1a;
+  --custom-sidebar-bg: #1f1f1f;
+}
+
+/* 应用到组件的样式 */
+.header-container {
+  background-color: var(--el-bg-color);
+}
+
+.album {
+  background-color: var(--el-bg-color-page) !important;
+}
+
+.photo-card {
+  background-color: var(--el-bg-color);
+}
+
+.sidebar-menu {
+  background-color: var(--el-bg-color) !important;
+}

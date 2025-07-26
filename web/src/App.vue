@@ -1,3 +1,23 @@
+<template>
+  <div class="app-wrapper">
+    <BaseHeader class="header" />
+    <div class="flex">
+      <el-scrollbar class="menu" :style="{ width: sideWidth }">
+        <BaseSide :sidelCollapse="sidelCollapse" />
+      </el-scrollbar>
+      <div class="content" v-if="routeName == '/'">
+        <RouterView />
+      </div>
+      <el-scrollbar class="content" v-else>
+        <RouterView />
+      </el-scrollbar>
+
+      <!-- 常驻前台的消息提示框 -->
+      <status-badge />
+    </div>
+  </div>
+</template>
+
 <script setup lang="ts">
 import { RouterView, useRoute } from 'vue-router'
 import { ref, onMounted, onBeforeUnmount } from 'vue'
@@ -37,45 +57,29 @@ onBeforeUnmount(() => {
 })
 </script>
 
-<template>
-  <div class="app-wrapper">
-    <BaseHeader class="header" />
-    <div class="flex">
-      <el-scrollbar class="menu" :style="{ width: sideWidth }">
-        <BaseSide :sidelCollapse="sidelCollapse" />
-      </el-scrollbar>
-      <div class="content" v-if="routeName == '/'">
-        <RouterView />
-      </div>
-      <el-scrollbar class="content" v-else>
-        <RouterView />
-      </el-scrollbar>
-
-      <!-- 常驻前台的消息提示框 -->
-      <status-badge />
-    </div>
-  </div>
-</template>
-
 <style>
 .app-wrapper {
   width: 100%;
   height: 100%;
+  background-color: var(--el-bg-color-page);
 }
 
 .header {
   height: 76px;
   padding: 0px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--el-border-color);
+  background-color: var(--el-bg-color);
 }
 
 .menu {
   height: calc(100vh - 76px);
+  background-color: var(--el-bg-color);
 }
 
 .content {
   position: relative;
   width: 100%;
   height: calc(100vh - 76px);
+  background-color: var(--el-bg-color-page);
 }
 </style>

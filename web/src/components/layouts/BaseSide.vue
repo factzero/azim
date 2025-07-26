@@ -92,7 +92,7 @@ watch(route, () => {
     </el-menu-item>
 
     <div v-show="sidelCollapse != true" class="px-4 py-2">
-      <div class="bg-slate-50 px-2 py-2" style="width: 140px">
+      <div class="bg-slate-50 px-2 py-2 rounded-lg" style="width: 160px">
         <div class="text-left">存储空间</div>
         <div class="text-slate-500 py-2 text-sm">已用 : 3.5GB / 16GB</div>
         <div class="custom-progress">
@@ -117,8 +117,8 @@ watch(route, () => {
 <style lang="scss" scoped>
 /* 自定义选中项的样式 */
 .sidebar-menu .el-menu-item.is-active {
-  background-color: #ecf5ff !important; /* 设置选中项的背景色 */
-  color: #409eff !important; /* 设置选中项的文字颜色 */
+  background-color: var(--el-color-primary-light-9) !important;
+  color: var(--el-color-primary) !important;
   border-radius: 0 32px 32px 0;
 }
 
@@ -133,26 +133,36 @@ watch(route, () => {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding-left: 20px !important; /* 调整内边距以适应布局 */
+  padding-left: 20px !important;
   border-radius: 0 32px 32px 0;
 }
 
 /* 鼠标悬停时的样式 */
 .sidebar-menu .el-menu-item:hover {
-  background-color: #f5f7fa !important; /* 悬停时的背景色 */
+  background-color: var(--el-fill-color-light) !important;
   border-radius: 0 32px 32px 0;
 }
 
 .el-menu {
   border-right: 0 !important;
+  background-color: var(--el-bg-color);
 }
 
 .custom-divider {
-  width: 50%; /* 设置为父元素的 50% 宽度 */
+  width: 50%;
 }
 
 .custom-progress .el-progress--line {
   margin-bottom: 10px;
   max-width: 120px;
+}
+
+.bg-slate-50 {
+  background-color: var(--el-fill-color-light) !important;
+  color: var(--el-text-color-primary) !important;
+}
+
+.text-slate-500 {
+  color: var(--el-text-color-regular) !important;
 }
 </style>
