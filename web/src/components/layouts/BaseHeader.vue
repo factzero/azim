@@ -49,17 +49,18 @@
             </el-upload>
           </div>
           <div class="px-4">
-            <el-tooltip effect="light" content="切换主题" placement="bottom">
+            <el-tooltip effect="dark" content="切换主题" placement="bottom">
               <el-switch
                 v-model="isDark"
                 :active-action-icon="Moon"
                 :inactive-action-icon="Sunny"
                 inline-prompt
+                style="--el-switch-on-color: #606266"
               />
             </el-tooltip>
           </div>
           <div class="px-4">
-            <el-tooltip effect="light" content="支持与反馈" placement="bottom">
+            <el-tooltip effect="dark" content="支持与反馈" placement="bottom">
               <el-button circle class="borderless-button white-to-gray">
                 <el-icon :size="24"><QuestionFilled /></el-icon>
               </el-button>
@@ -79,7 +80,7 @@
             <el-row :gutter="20" class="w-full h-full">
               <el-col :span="4">
                 <div class="flex justify-start items-center h-full">
-                  <el-tooltip effect="light" content="返回" placement="bottom">
+                  <el-tooltip effect="dark" content="返回" placement="bottom">
                     <el-button size="large" circle @click="closeSearchPage">
                       <el-icon :size="24"><Back /></el-icon>
                     </el-button>
@@ -108,11 +109,11 @@
           </el-header>
           <el-main class="h-full w-full">
             <div v-loading="loading" class="flex flex-wrap gap-x-1 gap-y-0">
-              <div v-for="photo in photos" :key="photo.id">
+              <div v-for="(photo, index) in photos" :key="photo.id">
                 <div
                   class="photo-card"
                   :class="{ 'bg-fuchsia-50': photo.selected }"
-                  @click="selectEditPhoto"
+                  @click="() => selectEditPhoto(index)"
                 >
                   <el-image
                     style="width: auto; height: 9rem"
@@ -137,7 +138,7 @@
       </div>
     </div>
     <div v-if="showEdit" class="edit-dialog-overlay">
-      <EditPhoto v-model="showEdit" />
+      <EditPhoto v-model="showEdit" :all-photos="photos" :initial-index="selectedPhotoIndex" />
     </div>
   </div>
 </template>
@@ -218,9 +219,9 @@ photos.push(
 )
 
 const showEdit = ref(false)
-
-const selectEditPhoto = () => {
-  console.log('selectEditPhoto')
+const selectedPhotoIndex = ref(0)
+const selectEditPhoto = (index: number) => {
+  selectedPhotoIndex.value = index
   showEdit.value = true
 }
 

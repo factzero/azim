@@ -19,7 +19,7 @@
               <div
                 class="photo-card"
                 :class="{ 'bg-fuchsia-50': photo.selected }"
-                @click="selectEditPhoto"
+                @click="selectEditPhoto(photo)"
               >
                 <el-image
                   style="width: auto; height: 9rem"
@@ -82,12 +82,12 @@
     </div>
   </div>
   <div v-if="showEdit" class="custom-dialog-overlay">
-    <EditPhoto v-model="showEdit" />
+    <EditPhoto v-model="showEdit" :all-photos="allPhotosList" :initial-index="selectedPhotoIndex" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, onMounted, onUnmounted, nextTick } from 'vue'
+import { reactive, ref, onMounted, onUnmounted, nextTick, computed } from 'vue'
 import { Select, CloseBold } from '@element-plus/icons-vue'
 import { getAllImgsInfo } from '@/api/ImgApi'
 
@@ -104,6 +104,20 @@ interface PhotoList {
 }
 
 const groupedPhotos = reactive<PhotoList[]>([])
+
+// 计算展平后的所有照片列表
+const allPhotosList = computed<Photo[]>(() => {
+  const photos: Photo[] = []
+  groupedPhotos.forEach((group) => {
+    group.photos.forEach((photo) => {
+      photos.push(photo)
+    })
+  })
+  return photos
+})
+
+// 当前选中的照片索引
+const selectedPhotoIndex = ref(0)
 
 const getImgs = async () => {
   try {
@@ -155,8 +169,13 @@ function selectRemovePhoto(photo: Photo) {
 
 const showEdit = ref(false)
 
-const selectEditPhoto = () => {
-  console.log('selectEditPhoto')
+// 修改 selectEditPhoto 方法以接受照片参数
+const selectEditPhoto = (photo: Photo) => {
+  // 找到选中照片在所有照片中的索引
+  const index = allPhotosList.value.findIndex((p) => p.id === photo.id)
+  if (index !== -1) {
+    selectedPhotoIndex.value = index
+  }
   showEdit.value = true
 }
 
